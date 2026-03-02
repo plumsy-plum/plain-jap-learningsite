@@ -1,46 +1,86 @@
+/* Big Rectangle Card for Readings */
+.reading-card {
+  background: var(--dusty-denim, #778da9);
+  color: var(--alabaster-grey, #e0e1dd);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(65,90,119,0.12);
+  margin-top: 2rem;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.reading-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--prussian-blue, #1b263b);
+}
+.reading-content {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--alabaster-grey, #e0e1dd);
+}
 .flashcard-container {
-  background: #ede0d4;
+  /* main wrapper for a card; responsive width with max cap */
+  background: var(--lemon-chiffon, #fcf6bd);
   padding: 2rem;
   border-radius: 20px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 95%;
+  max-width: 900px;
+  box-shadow: 0 10px 30px rgba(228,193,249,0.10);
+  color: var(--mauve, #e4c1f9);
 }
 
 .flashcard-main-wrapper {
+  /* gradient card containing character and speaker */
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, var(--baby-pink, #ff99c8) 0%, var(--icy-blue, #a9def9) 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(169,222,249,0.10);
 }
 
 .flashcard-main {
-  background: #c4af9d;
+  /* character itself -- transparent so gradient shows through */
+  background: transparent;
   border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
-  font-size: 3rem;
-  width: 200px;
-  height: 200px;
+  font-size: 180px;
+  width: auto;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #414833;
+  color: var(--dusk-blue, #415a77);
+  text-shadow: 0 2px 12px var(--ink-black, #0d1b2aff);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: bold;
 }
 
 .speaker-btn {
   position: absolute;
   right: -20px;
   bottom: -20px;
-  background: #c4af9d;
-  border: 3px solid #ede0d4;
+  background: var(--lemon-chiffon, #fcf6bd);
+  border: 3px solid var(--icy-blue, #a9def9);
   border-radius: 50%;
   width: 60px;
   height: 60px;
   font-size: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(169,222,249,0.10);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,28 +94,36 @@
 .flashcard-details {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
 }
 
 .detail-card {
-  background: #c4af9d;
+  background: var(--prussian-blue, #1b263b);
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(119,141,169,0.10);
   padding: 1rem;
-  min-width: 120px;
+  flex: 1;
+  min-width: 0;
   text-align: center;
-  color: #414833;
+  color: var(--alabaster-grey, #e0e1dd);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.detail-card strong {
-  display: block;
+.detail-title {
   font-size: 0.85rem;
-  color: #7f5539;
+  color: var(--dusty-denim, #778da9);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
-.detail-card div {
-  font-size: 1rem;
-  color: #414833;
+.detail-content {
+  font-size: 1.1rem;
+  color: var(--alabaster-grey, #e0e1dd);
+  font-weight: 700;
 }

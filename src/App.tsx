@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import LevelPage from './pages/LevelPage';
 import Quiz from './pages/Quiz';
+import CategoryTable from './pages/CategoryTable';
 import { initSession } from './utils/session';
 import { loginAnonymously } from './utils/firebase';
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/level/:levelId" element={<LevelPage />} />
           <Route path="/quiz/:level" element={<Quiz />} />
+          <Route path="/category/:type" element={<CategoryTable />} />
         </Routes>
       </div>
     </Router>

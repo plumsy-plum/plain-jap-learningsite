@@ -28,6 +28,7 @@ const Hiragana: React.FC<HiraganaProps> = ({ items }) => {
             example={item.example}
             level="hiragana"
             cardIndex={idx}
+            type="hiragana"
           />
         ))}
       </div>

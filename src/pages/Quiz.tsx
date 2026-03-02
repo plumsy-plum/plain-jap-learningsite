@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { hiragana } from "../data/hiragana";
 import { katakana } from "../data/katakana";
 import { kanji } from "../data/kanji";
+import { APP_DATA } from "../data/levels";
 import { logEvent, logSession } from "../utils/logger";
 import "./Quiz.css";
 
@@ -16,18 +17,29 @@ const Quiz: React.FC = () => {
   const { level } = useParams<{ level: string }>();
   const navigate = useNavigate();
 
-  // Load dataset based on level
+  // Normalize route level to a dataset key (handles values like "hiragana-1")
+  const baseLevel = (level || "").toLowerCase().split("-")[0];
+
+  // Load dataset based on normalized level. Returns a normalized shape: { char, romaji?, meaning? }
   const getDataset = () => {
-    switch (level) {
-      case "hiragana":
-        return hiragana;
-      case "katakana":
-        return katakana;
-      case "kanji":
-        return kanji;
-      default:
-        return [];
+    // explicit named datasets
+    if (baseLevel === "hiragana") {
+      return hiragana.map(h => ({ char: h.char, romaji: h.romaji }));
     }
+    if (baseLevel === "katakana") {
+      return katakana.map(k => ({ char: k.char, romaji: k.romaji }));
+    }
+    if (baseLevel === "kanji") {
+      return kanji.map(k => ({ char: k.char, meaning: k.meaning }));
+    }
+
+    // If route is a level id like L10, try to find it in APP_DATA
+    const levelEntry = APP_DATA.find(l => l.levelId.toLowerCase() === (level || "").toLowerCase());
+    if (levelEntry) {
+      return levelEntry.items.map(i => ({ char: i.character, romaji: i.romaji, meaning: i.meaning }));
+    }
+
+    return [];
   };
 
   // Generate random questions
@@ -37,16 +49,34 @@ const Quiz: React.FC = () => {
     const selected = shuffled.slice(0, 10);
 
     return selected.map((item: any) => {
-      const isKanji = level === "kanji";
-      const correctAnswer = isKanji ? item.meaning : item.romaji;
+      // Try to use romaji, then meaning, then character, then example
+      let correctAnswer = item.romaji || item.meaning || item.char || item.example || "";
       const allItems = dataset;
 
-      // Get 3 wrong answers
+      // Get 3 wrong answers from all possible answer fields
       const wrongAnswers = allItems
-        .filter((x: any) => (isKanji ? x.meaning !== correctAnswer : x.romaji !== correctAnswer))
+        .filter((x: any) => {
+          const candidate = x.romaji || x.meaning || x.char || x.example || "";
+          return candidate !== correctAnswer && candidate !== "";
+        })
+        .map((x: any) => x.romaji || x.meaning || x.char || x.example || "")
         .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
-        .map((x: any) => (isKanji ? x.meaning : x.romaji));
+        .slice(0, 3);
+
+      // If not enough wrong answers, fill with random characters
+      while (wrongAnswers.length < 3) {
+        const random = allItems[Math.floor(Math.random() * allItems.length)];
+        // Safely access possible fields
+        const candidate =
+          ("romaji" in random && random.romaji) ||
+          ("meaning" in random && random.meaning) ||
+          random.char ||
+          ("example" in random && (random as any).example) ||
+          "";
+        if (candidate !== correctAnswer && !wrongAnswers.includes(candidate) && candidate !== "") {
+          wrongAnswers.push(candidate);
+        }
+      }
 
       // Shuffle options
       const options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);

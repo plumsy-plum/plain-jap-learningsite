@@ -27,6 +27,7 @@ const Katakana: React.FC<KatakanaProps> = ({ items }) => {
             example={item.example}
             level="katakana"
             cardIndex={idx}
+            type="katakana"
           />
         ))}
       </div>

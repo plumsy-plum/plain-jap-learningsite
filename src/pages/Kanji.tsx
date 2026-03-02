@@ -26,6 +26,7 @@ const Kanji: React.FC<KanjiProps> = ({ items }) => {
             example={item.example}
             level="kanji"
             cardIndex={idx}
+            type="kanji"
           />
         ))}
       </div>

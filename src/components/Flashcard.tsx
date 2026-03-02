@@ -7,6 +7,9 @@ interface FlashcardProps {
   meaning?: string;
   romaji?: string;
   example?: string;
+  kunyomi?: string;
+  onyomi?: string;
+  type: 'kanji' | 'hiragana' | 'katakana' | 'vocab' | 'grammar';
   cardIndex?: number;
   level?: string;
 }
@@ -16,6 +19,9 @@ const Flashcard: React.FC<FlashcardProps> = ({
   meaning,
   romaji,
   example,
+  kunyomi,
+  onyomi,
+  type,
   cardIndex = 0,
   level = "unknown"
 }) => {
@@ -54,22 +60,46 @@ const Flashcard: React.FC<FlashcardProps> = ({
         </button>
       </div>
 
-      {/* Detail Cards below - shown only when flipped for the Gamified version */}
+      {/* Detail Cards below - shown only when flipped */}
       {flipped && (
-        <div className="flashcard-details">
-          <div className="detail-card">
-            <span className="detail-title">Meaning</span>
-            <div className="detail-content">{meaning || "-"}</div>
+        <>
+          <div className="flashcard-details">
+            {/* Romaji Card (for Hiragana/Katakana) */}
+            {(type === 'hiragana' || type === 'katakana') && romaji && (
+              <div className="detail-card">
+                <span className="detail-title">Romaji</span>
+                <div className="detail-content">{romaji}</div>
+              </div>
+            )}
+
+            {/* Meaning Card (for Kanji/Vocab/Grammar) */}
+            {(type === 'kanji' || type === 'vocab' || type === 'grammar') && meaning && (
+              <div className="detail-card">
+                <span className="detail-title">Meaning</span>
+                <div className="detail-content">{meaning}</div>
+              </div>
+            )}
+
+            {/* Example Card (for Kanji/Vocab/Grammar) */}
+            {(type === 'kanji' || type === 'vocab' || type === 'grammar') && example && (
+              <div className="detail-card">
+                <span className="detail-title">Example</span>
+                <div className="detail-content">{example}</div>
+              </div>
+            )}
           </div>
-          <div className="detail-card">
-            <span className="detail-title">Example</span>
-            <div className="detail-content">{example || "-"}</div>
-          </div>
-          <div className="detail-card">
-            <span className="detail-title">Romaji</span>
-            <div className="detail-content">{romaji || "-"}</div>
-          </div>
-        </div>
+
+          {/* Big Rectangle Card for Readings - KANJI ONLY */}
+          {type === 'kanji' && kunyomi && onyomi && (
+            <div className="reading-card">
+              <span className="reading-title">Kunyomi & Onyomi</span>
+              <div className="reading-content">
+                <div><strong>Kunyomi:</strong> {kunyomi}</div>
+                <div><strong>Onyomi:</strong> {onyomi}</div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
