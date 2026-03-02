@@ -21,7 +21,8 @@ const Kanji: React.FC<KanjiProps> = ({ items }) => {
           <Flashcard
             key={idx}
             character={item.character}
-            back={item.meaning || item.romaji || ""}
+            meaning={item.meaning}
+            romaji={item.romaji}
             example={item.example}
             level="kanji"
             cardIndex={idx}

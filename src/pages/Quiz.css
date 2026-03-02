@@ -9,8 +9,10 @@
   font-size: 3rem;
   margin: 2rem 0;
   padding: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #a68a64;
   border-radius: 8px;
+  background: #ede0d4;
+  color: #414833;
 }
 
 .options {
@@ -23,15 +25,17 @@
 .options button {
   padding: 1rem;
   font-size: 1.1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #a68a64;
   border-radius: 4px;
   cursor: pointer;
-  background: #fff;
+  background: #c4af9d;
+  color: #414833;
   transition: background 0.2s;
 }
 
 .options button:hover:not(:disabled) {
-  background: #f0f0f0;
+  background: #a68a64;
+  color: #ede0d4;
 }
 
 .options button:disabled {
@@ -39,13 +43,15 @@
 }
 
 .options button.correct {
-  background: #90EE90;
-  border-color: #228B22;
+  background: #656d4a;
+  border-color: #414833;
+  color: #ede0d4;
 }
 
 .options button.incorrect {
-  background: #FFB6C6;
-  border-color: #DC143C;
+  background: #7f5539;
+  border-color: #414833;
+  color: #ede0d4;
 }
 
 .next-button {
@@ -53,12 +59,12 @@
   font-size: 1rem;
   margin-top: 1rem;
   cursor: pointer;
-  background: #4CAF50;
-  color: white;
+  background: #7f5539;
+  color: #ede0d4;
   border: none;
   border-radius: 4px;
 }
 
 .next-button:hover {
-  background: #45a049;
+  background: #656d4a;
 }

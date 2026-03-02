@@ -23,7 +23,8 @@ const Hiragana: React.FC<HiraganaProps> = ({ items }) => {
           <Flashcard
             key={idx}
             character={item.character}
-            back={item.romaji || item.meaning || ""}
+            meaning={item.meaning}
+            romaji={item.romaji}
             example={item.example}
             level="hiragana"
             cardIndex={idx}

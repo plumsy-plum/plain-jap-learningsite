@@ -1,0 +1,22 @@
+.dashboard {
+  padding: 2rem;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+  gap: 1rem;
+}
+
+.level-card {
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.level-card.blue { background: #7f5539; }
+.level-card.green { background: #656d4a; }
+.level-card.orange { background: #a68a64; }
