@@ -1,16 +1,22 @@
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2rem;
   padding: 1rem 0;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: var(--lemon-chiffon, #fcf6bd);
+  border-bottom: 1px solid var(--baby-pink, #ff99c8);
+  box-shadow: 0 2px 16px rgba(233,193,249,0.10);
 }
 
 .nav-link {
   text-decoration: none;
-  color: #333;
+  color: #414833;
   font-size: 1.1rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -18,10 +24,12 @@
 }
 
 .nav-link.active {
-  background: #f0f0f0;
+  background: var(--dusty-denim, #778da9);
   font-weight: bold;
+  color: var(--alabaster-grey, #e0e1dd);
 }
 
 .nav-link:hover {
-  background: #f5f5f5;
+  background: var(--dusk-blue, #415a77);
+  color: var(--alabaster-grey, #e0e1dd);
 }

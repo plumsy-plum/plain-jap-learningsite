@@ -7,9 +7,21 @@ export interface LogEvent {
   sessionId?: string;
   eventType: string;
   level: string;
-  questionId: number;
-  responseTime: number;
-  isCorrect: boolean;
+  questionId?: number;
+  responseTime?: number;
+  isCorrect?: boolean;
+  timestamp?: any;
+}
+
+// summary info for a quiz/session
+export interface SessionLog {
+  userId?: string;
+  sessionId?: string;
+  level: string;
+  score: number;
+  totalQuestions: number;
+  incorrectClicks: number;
+  avgResponseTime?: number; // milliseconds
   timestamp?: any;
 }
 
@@ -18,6 +30,11 @@ let eventLog: LogEvent[] = [];
 let totalInteractions = 0;
 
 export const logEvent = async (event: LogEvent): Promise<void> => {
+    if (!event.eventType || !event.level) {
+        console.warn("Invalid event data");
+        return;
+    }
+
   try {
     const user = auth.currentUser;
     if (!user) {
@@ -57,6 +74,31 @@ export const logEvent = async (event: LogEvent): Promise<void> => {
   }
 };
 
+// log a summary of a quiz/session
+export const logSession = async (sessionData: SessionLog): Promise<void> => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      console.warn("User not authenticated, cannot log session");
+      return;
+    }
+    const sessionId = getCurrentSession()?.sessionId || "unknown";
+    const completeData: SessionLog = {
+      userId: user.uid,
+      sessionId,
+      ...sessionData
+    };
+
+    // store in Firestore under a separate collection
+    await addDoc(collection(db, "session_logs"), {
+      ...completeData,
+      timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Error logging session to Firestore:", error);
+  }
+};
+
 export const getLogs = (): LogEvent[] => {
   return [...eventLog];
 };
@@ -73,7 +115,7 @@ export const getLogStats = () => {
   const totalEvents = eventLog.length;
   const correctAnswers = eventLog.filter(log => log.isCorrect).length;
   const avgResponseTime = eventLog.length > 0
-    ? eventLog.reduce((sum, log) => sum + log.responseTime, 0) / eventLog.length
+    ? eventLog.reduce((sum, log) => sum + (log.responseTime || 0), 0)/ eventLog.length
     : 0;
 
   return {

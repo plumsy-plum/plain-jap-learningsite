@@ -3,10 +3,10 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Hiragana from './pages/Hiragana';
-import Katakana from './pages/Katakana';
-import Kanji from './pages/Kanji';
+import Dashboard from './pages/Dashboard';
+import LevelPage from './pages/LevelPage';
 import Quiz from './pages/Quiz';
+import CategoryTable from './pages/CategoryTable';
 import { initSession } from './utils/session';
 import { loginAnonymously } from './utils/firebase';
 
@@ -31,10 +31,10 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/hiragana" element={<Hiragana />} />
-          <Route path="/katakana" element={<Katakana />} />
-          <Route path="/kanji" element={<Kanji />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/level/:levelId" element={<LevelPage />} />
           <Route path="/quiz/:level" element={<Quiz />} />
+          <Route path="/category/:type" element={<CategoryTable />} />
         </Routes>
       </div>
     </Router>
