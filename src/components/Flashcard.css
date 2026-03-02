@@ -13,3 +13,9 @@
   padding: 1rem;
   text-align: center;
 }
+
+.flashcard .example {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+}

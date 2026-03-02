@@ -3,13 +3,14 @@ import { logEvent } from "../utils/logger";
 import "./Flashcard.css";
 
 interface FlashcardProps {
-  front: string;
-  back: string;
+  character: string;            // displayed on front
+  back: string;                 // romaji, meaning, etc.
+  example?: string;             // optional example sentence
   cardIndex?: number;
   level?: string;
 }
 
-const Flashcard: React.FC<FlashcardProps> = ({ front, back, cardIndex = 0, level = "unknown" }) => {
+const Flashcard: React.FC<FlashcardProps> = ({ character, back, example, cardIndex = 0, level = "unknown" }) => {
   const [flipped, setFlipped] = useState(false);
 
   const handleClick = async () => {
@@ -27,7 +28,14 @@ const Flashcard: React.FC<FlashcardProps> = ({ front, back, cardIndex = 0, level
 
   return (
     <div className="flashcard" onClick={handleClick}>
-      {flipped ? back : front}
+      {flipped ? (
+        <div>
+          <div>{back}</div>
+          {example && <div className="example">{example}</div>}
+        </div>
+      ) : (
+        <div>{character}</div>
+      )}
     </div>
   );
 };
