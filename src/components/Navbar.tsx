@@ -5,9 +5,7 @@ import "./Navbar.css";
 const Navbar: React.FC = () => (
   <nav className="navbar">
     <NavLink to="/" className="nav-link">Home</NavLink>
-    <NavLink to="/hiragana" className="nav-link">Hiragana</NavLink>
-    <NavLink to="/katakana" className="nav-link">Katakana</NavLink>
-    <NavLink to="/kanji" className="nav-link">Kanji</NavLink>
+    <NavLink to="/dashboard" className="nav-link">My Quest</NavLink>
   </nav>
 );
 

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { hiragana } from "../data/hiragana";
 import { katakana } from "../data/katakana";
 import { kanji } from "../data/kanji";
-import { logEvent } from "../utils/logger";
+import { logEvent, logSession } from "../utils/logger";
 import "./Quiz.css";
 
 interface ResponseTime {
@@ -66,6 +66,7 @@ const Quiz: React.FC = () => {
   const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
   const [responseTimes, setResponseTimes] = useState<ResponseTime[]>([]);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [incorrectClicks, setIncorrectClicks] = useState(0);
 
   // Log quiz start
   useEffect(() => {
@@ -104,10 +105,19 @@ const Quiz: React.FC = () => {
           responseTime: Math.round(avgResponseTime * 1000),
           isCorrect: score === questions.length
         });
+
+        // also log session summary
+        await logSession({
+          level: level || "unknown",
+          score,
+          totalQuestions: questions.length,
+          incorrectClicks,
+          avgResponseTime: Math.round(avgResponseTime * 1000)
+        });
       }
     };
     logComplete();
-  }, [currentQ, questions.length, responseTimes, score, level]);
+  }, [currentQ, questions.length, responseTimes, score, level, incorrectClicks]);
 
   const handleAnswer = async (selected: string) => {
     const responseTime = Date.now() - questionStartTime;
@@ -121,6 +131,10 @@ const Quiz: React.FC = () => {
       responseTime,
       isCorrect
     });
+
+    if (!isCorrect) {
+      setIncorrectClicks(prev => prev + 1);
+    }
 
     setResponseTimes([...responseTimes, {
       questionIndex: currentQ,
@@ -154,7 +168,7 @@ const Quiz: React.FC = () => {
         <h2>Quiz Complete!</h2>
         <p>Score: {score} / {questions.length}</p>
         <p>Average Response Time: {avgResponseTime}s</p>
-        <button onClick={() => navigate(`/${level}`)}>Back to {level}</button>
+        <button onClick={() => navigate(`/level/${level}`)}>Back to {level}</button>
       </div>
     );
   }
