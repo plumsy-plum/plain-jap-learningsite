@@ -6,103 +6,11 @@ import { initSession } from "../utils/session";
 import { APP_DATA } from "../data/levels";
 import type { LevelItem } from "../data/levels";
 
-const containerStyle: React.CSSProperties = {
-  background: "var(--lemon-chiffon, #fcf6bd)",
-  minHeight: "20vh",
-  width: "98%",
-  maxWidth: "1100px",
-  margin: "5.5rem auto 2rem auto",
-  padding: "2.5rem 2rem",
-  borderRadius: "32px",
-  boxShadow: "0 10px 30px rgba(228,193,249,0.10)", // mauve shadow
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  transition: "box-shadow 0.3s, transform 0.3s",
-  position: "relative",
-  color: "var(--mauve, #e4c1f9)"
-};
-
-// when the lesson hasn't started we want content vertically centered
-const preLessonContainerStyle: React.CSSProperties = {
-  ...containerStyle,
-  justifyContent: "center"
-};
-
-const startCardStyle: React.CSSProperties = {
-  background: "var(--frosted-mint, #d0f4de)",
-  padding: "2rem",
-  borderRadius: "1rem",
-  width: "100%",
-  maxWidth: "500px",
-  textAlign: "center",
-  boxShadow: "0 10px 30px rgba(169,222,249,0.10)", // icy-blue shadow
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center"
-};
-
-const startButtonStyle: React.CSSProperties = {
-  borderRadius: "999px",
-  backgroundColor: "var(--baby-pink, #ff99c8)",
-  color: "var(--mauve, #e4c1f9)",
-  border: "none",
-  padding: "16px 60px",
-  fontSize: "1.2rem",
-  cursor: "pointer",
-  marginTop: "2rem",
-  transition: "transform 0.2s"
-};
-
-const lessonContainerStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  maxWidth: "900px",
-  width: "95%",
-  margin: "0 auto"
-};
-
-const buttonStyle: React.CSSProperties = {
-  borderRadius: "25px",
-  backgroundColor: "#212529",
-  color: "#ffffff",
-  border: "none",
-  padding: "12px 40px",
-  fontSize: "1rem",
-  cursor: "pointer",
-  marginTop: "2rem",
-  transition: "background 0.3s",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.05)"
-};
-
-const pageIndicatorStyle: React.CSSProperties = {
-  marginTop: "1rem",
-  fontSize: "0.95rem",
-  color: "#212529"
-};
-
-const titleStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: "2rem",
-  fontWeight: 700,
-  color: "var(--baby-pink, #ff99c8)",
-  letterSpacing: "-0.02em"
-};
-
-const subtitleStyle: React.CSSProperties = {
-  margin: "0.5rem 0",
-  fontSize: "1rem",
-  color: "var(--icy-blue, #a9def9)"
-};
-
 const LevelPage: React.FC = () => {
   const { levelId = "1" } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isLessonStarted, setIsLessonStarted] = useState(false);
-  const [hoveringStart, setHoveringStart] = useState(false);
   const [showHint, setShowHint] = useState(true);
 
   const levelData = APP_DATA.find(l => l.levelId === levelId);
@@ -120,7 +28,6 @@ const LevelPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    // advance index but never go past last element
     setCurrentIdx(prev => {
       const next = prev + 1;
       return next < items.length ? next : prev;
@@ -130,7 +37,6 @@ const LevelPage: React.FC = () => {
   const renderFlashcard = () => {
     if (!currentItem) return null;
 
-    // Prefer explicit item type, otherwise infer from levelId
     const type = currentItem.type
       || (levelData?.levelId.includes('hiragana') ? 'hiragana'
         : levelData?.levelId.includes('katakana') ? 'katakana'
@@ -153,73 +59,82 @@ const LevelPage: React.FC = () => {
   };
 
   return (
-    <div className="level-container" style={isLessonStarted ? containerStyle : preLessonContainerStyle}>
-      <h1>{levelId}</h1>
+    <div 
+      className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 pb-16 pt-24"
+      style={{ fontFamily: '"Press Start 2P", cursive' }}
+    >
+      {/* FOOLPROOF BACKGROUND LAYER */}
+      <div 
+        className="fixed top-0 left-0 w-full h-screen -z-10 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/village bg.png')" }}
+      />
+
+      {/* PAGE TITLE HUD */}
+      <div className="absolute top-28 bg-[#f9e4c8] border-4 border-[#4a3018] px-8 py-3 shadow-[6px_6px_0_#2d1a0b] z-10">
+        <h1 className="text-xl md:text-2xl text-[#4a3018] drop-shadow-sm tracking-wider uppercase m-0">
+          {levelId}
+        </h1>
+      </div>
 
       {!isLessonStarted ? (
-        levelId && (
-          <div
-            style={{
-              ...startCardStyle,
-              transform: hoveringStart ? "translateY(-6px)" : "translateY(0)",
-              boxShadow: hoveringStart
-                ? "0 18px 40px rgba(0,0,0,0.08)"
-                : "0 10px 30px rgba(0,0,0,0.05)",
-              transition: "transform 0.25s ease, box-shadow 0.25s ease"
-            }}
-            onMouseEnter={() => setHoveringStart(true)}
-            onMouseLeave={() => setHoveringStart(false)}
+        /* PRE-LESSON SCREEN: The "Ready for Quest" Box */
+        <div className="bg-[#fdf1d9] border-4 border-[#4a3018] rounded-xl p-10 max-w-md w-full flex flex-col items-center shadow-[12px_12px_0_rgba(0,0,0,0.5)] z-10 mt-12">
+          <h2 className="text-2xl text-[#4a3018] font-bold uppercase mb-4 text-center leading-relaxed">
+            Ready for <br/> {levelId}?
+          </h2>
+          <p className="text-[#4a3018] opacity-80 mb-8 uppercase tracking-widest text-sm">
+            {items.length} Items
+          </p>
+
+          {/* Gamified Start Button */}
+          <button
+            className="flex items-center gap-3 bg-[#ffe8a3] border-4 border-[#4a3018] px-8 py-4 rounded-md shadow-[6px_6px_0_#2d1a0b] hover:translate-y-[4px] hover:shadow-[2px_2px_0_#2d1a0b] active:translate-y-[6px] active:shadow-none transition-all cursor-pointer group"
+            onClick={startLesson}
           >
-            <h2 style={titleStyle}>Ready for {levelId}?</h2>
-            <p style={subtitleStyle}>{items.length} Items</p>
-            <button
-              style={{
-                ...startButtonStyle,
-                transform: hoveringStart ? "scale(1.05)" : "scale(1)",
-                boxShadow: hoveringStart
-                  ? "0 14px 34px rgba(0,122,255,0.24)"
-                  : "0 8px 20px rgba(0,0,0,0.08)"
-              }}
-              onMouseEnter={() => setHoveringStart(true)}
-              onMouseLeave={() => setHoveringStart(false)}
-              onClick={startLesson}
-            >
+            <img src="/smallw-removebg-preview.png" className="h-10 -ml-2 drop-shadow-md group-hover:animate-bounce" alt="Wizard" />
+            <span className="text-[#4a3018] text-lg font-bold uppercase tracking-wider whitespace-nowrap">
               Start Lesson
-            </button>
-          </div>
-        )
+            </span>
+          </button>
+        </div>
       ) : (
-        <div style={lessonContainerStyle}>
-          {renderFlashcard()}
-          {showHint && (
-            <div className="lesson-hint" role="status">
-              <div className="lesson-hint__title">Tip</div>
-              <div className="lesson-hint__body">Click the card to flip and reveal details.</div>
-              <button className="lesson-hint__btn" onClick={() => setShowHint(false)}>Got it</button>
-            </div>
-          )}
-          {currentIdx === items.length - 1 ? (
-            <>
+        /* ACTIVE LESSON SCREEN */
+        <div className="flex flex-col items-center w-full max-w-2xl mt-16 z-10">
+          
+          {/* Renders your existing Flashcard component inside the retro layout */}
+          <div className="w-full flex justify-center mb-8">
+            {renderFlashcard()}
+          </div>
+
+          {/* Controls Area (Next / Start Quiz) */}
+          <div className="flex flex-col items-center mt-4">
+            {currentIdx === items.length - 1 ? (
               <button
-                style={buttonStyle}
+                className="flex items-center gap-3 bg-[#4ade80] border-4 border-[#4a3018] px-8 py-4 rounded-md shadow-[6px_6px_0_#2d1a0b] hover:translate-y-[4px] hover:shadow-[2px_2px_0_#2d1a0b] active:translate-y-[6px] active:shadow-none transition-all cursor-pointer group"
                 onClick={() => navigate(`/quiz/${levelId}`)}
               >
-                Start Quiz
+                <img src="/smallw-removebg-preview.png" className="h-8 drop-shadow-md group-hover:animate-bounce" alt="Wizard" />
+                <span className="text-[#4a3018] text-base font-bold uppercase tracking-wider whitespace-nowrap">
+                  Start Quiz
+                </span>
               </button>
-              <div style={pageIndicatorStyle}>
-                {currentIdx + 1} / {items.length}
-              </div>
-            </>
-          ) : (
-            <>
-              <button style={buttonStyle} onClick={handleNext}>
-                Next
+            ) : (
+              <button 
+                className="bg-[#f9e4c8] border-4 border-[#4a3018] px-10 py-3 rounded-md shadow-[6px_6px_0_#2d1a0b] hover:translate-y-[4px] hover:shadow-[2px_2px_0_#2d1a0b] active:translate-y-[6px] active:shadow-none transition-all cursor-pointer text-[#4a3018] font-bold uppercase tracking-widest text-sm"
+                onClick={handleNext}
+              >
+                Next Item
               </button>
-              <div style={pageIndicatorStyle}>
-                {currentIdx + 1} / {items.length}
-              </div>
-            </>
-          )}
+            )}
+
+            {/* Retro Progress Indicator */}
+            <div className="mt-6 bg-[#2a303c] border-2 border-[#4a3018] px-4 py-2 rounded-sm shadow-[4px_4px_0_#2d1a0b]">
+              <span className="text-cyan-300 text-xs tracking-widest">
+                PROGRESS: {currentIdx + 1}/{items.length}
+              </span>
+            </div>
+          </div>
+          
         </div>
       )}
     </div>
